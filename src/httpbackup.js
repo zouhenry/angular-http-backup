@@ -12,20 +12,18 @@
   'use strict';
 
   angular.module( 'httpbackup', [] )
-    .factory( 'HttpBackupInterceptor', iscHttpBackupInterceptor );
+    .factory( 'HttpBackupInterceptor', ['$q', iscHttpBackupInterceptor] );
 
   /**
-   * Saves previously successful ajax requests in localstorage and replays them back when there’s server response fails/network error
+   * Saves previously successful ajax requests in localStorage and replays them back when there’s server response fails/network error
    *
    */
-  /* @ngInject */
-  function iscHttpBackupInterceptor(  $q ) {//jshint ignore:line
+  function iscHttpBackupInterceptor(  $q ) {
 
     return {
       response     : response,
       responseError: responseError
     };
-
 
     function response( response ) {
       // for every successful request, cache the response
@@ -49,5 +47,6 @@
       }
     }
   }
+
 
 })();
