@@ -1,0 +1,19 @@
+{
+  "name": "angular-http-backup",
+  "version": "1.0.0",
+  "description": "http backup for when service/network fails",
+  "main": "httpbackup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zouhenry/angular-http-backup.git"
+  },
+  "author": "zouhenry@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zouhenry/angular-http-backup/issues"
+  },
+  "homepage": "https://github.com/zouhenry/angular-http-backup#readme"
+}
