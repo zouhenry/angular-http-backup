@@ -1,12 +1,12 @@
 {
   "name": "angular-http-backup",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "http backup for when service/network fails",
   "main": "httpbackup.js",
   "scripts": {
     "prestart": "rm -rf dist",
     "start": "webpack;",
-    "postinstall" : "webpack",
+    "prepublish" : "npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
