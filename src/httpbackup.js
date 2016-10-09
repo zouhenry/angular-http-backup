@@ -11,7 +11,7 @@
 (function() {
   'use strict';
 
-  angular.module( 'httpbackup' )
+  angular.module( 'httpbackup', [] )
     .factory( 'HttpBackupInterceptor', iscHttpBackupInterceptor );
 
   /**
