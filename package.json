@@ -1,12 +1,12 @@
 {
   "name": "angular-http-backup",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "http backup for when service/network fails",
   "main": "httpbackup.js",
   "scripts": {
     "prestart": "rm -rf dist",
     "start": "webpack;",
-    "prepublish" : "npm start",
+    "precommit": "npm start; git add dist;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +19,7 @@
     "url": "https://github.com/zouhenry/angular-http-backup/issues"
   },
   "homepage": "https://github.com/zouhenry/angular-http-backup#readme",
-  "devDependencies" : {
+  "devDependencies": {
     "babel-core": "^6.10.4",
     "babel-istanbul-loader": "^0.1.0",
     "babel-loader": "^6.2.4",
@@ -40,5 +40,8 @@
     "webpack": "^1.13.1",
     "webpack-core": "^0.6.8",
     "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "jasmine-core": "^2.5.2"
   }
 }
