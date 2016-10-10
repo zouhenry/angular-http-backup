@@ -1,12 +1,12 @@
 {
   "name": "angular-http-backup",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "http backup for when service/network fails",
   "main": "httpbackup.js",
   "scripts": {
     "prestart": "rm -rf dist",
     "start": "webpack;",
-    "precommit": "npm start; git add dist;",
+    "prepublish": "npm start; git add dist; git commit -m \"updating dist files\"; git push;",
     "test": "karma start -c karma.conf.js --single-run=true --auto-watch=false"
   },
   "repository": {
