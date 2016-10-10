@@ -10,6 +10,7 @@
 
 import httpbackupInterceptor from './httpbackup.interceptor';
 
+export default
 angular.module( 'httpbackup', [] )
-  .factory( 'HttpBackupInterceptor', httpbackupInterceptor );
+  .factory( 'httpBackupInterceptor', httpbackupInterceptor );
 

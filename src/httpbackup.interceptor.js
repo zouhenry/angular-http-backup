@@ -21,6 +21,7 @@ function HttpBackupInterceptor( $q ) {
   function responseError( response ) {
     var data = window.localStorage.getItem( response.config.url );
     if ( data ) { //if response fails and there's cached data
+
       try {
         // use cached data
         data = JSON.parse( data );
