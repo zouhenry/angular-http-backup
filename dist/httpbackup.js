@@ -46,21 +46,25 @@
 
 	'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _httpbackup = __webpack_require__(1);
 	
 	var _httpbackup2 = _interopRequireDefault(_httpbackup);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	angular.module('httpbackup', []).factory('HttpBackupInterceptor', _httpbackup2.default); /**
-	                                                                                          * Created by Henry Zou on 10/7/2016.
-	                                                                                          *
-	                                                                                          *
-	                                                                                          * USAGE:
-	                                                                                          * In the config block, register the Interceptor
-	                                                                                          * $httpProvider.interceptors.push( 'HttpBackupInterceptor' );
-	                                                                                          *
-	                                                                                          */
+	exports.default = angular.module('httpbackup', []).factory('httpBackupInterceptor', _httpbackup2.default); /**
+	                                                                                                            * Created by Henry Zou on 10/7/2016.
+	                                                                                                            *
+	                                                                                                            *
+	                                                                                                            * USAGE:
+	                                                                                                            * In the config block, register the Interceptor
+	                                                                                                            * $httpProvider.interceptors.push( 'HttpBackupInterceptor' );
+	                                                                                                            *
+	                                                                                                            */
 
 /***/ },
 /* 1 */
@@ -68,7 +72,7 @@
 
 	'use strict';
 	
-	HttpBackupInterceptor.$inject = ["$q"];
+	HttpBackupInterceptor.$inject = ["$q", "$log"];
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -80,7 +84,7 @@
 	
 	/* @ngInject */
 	
-	function HttpBackupInterceptor($q) {
+	function HttpBackupInterceptor($q, $log) {
 	
 	  return {
 	    response: response,
@@ -97,10 +101,11 @@
 	    var data = window.localStorage.getItem(response.config.url);
 	    if (data) {
 	      //if response fails and there's cached data
+	
 	      try {
 	        // use cached data
 	        data = JSON.parse(data);
-	        console.warn('using offline cache:', response.config.url);
+	        console.debug('using offline cache:', response.config.url);
 	        return $q.resolve(data);
 	      } catch (ex) {
 	        return $q.reject(response);
