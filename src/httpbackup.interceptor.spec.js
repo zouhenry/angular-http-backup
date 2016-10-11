@@ -1,14 +1,16 @@
-// import httpbackup from './httpbackup.module';
-import httpbackupInterceptor from './httpbackup.interceptor';
+import HttpBackupInterceptor from './httpbackup.interceptor';
+import HttpBackupStorage from './httpbackup.storage';
+
 import { noop }  from 'lodash';
 
-describe( 'httpbackupInterceptor', ()=> {
+describe( 'HttpBackupInterceptor', ()=> {
   let $q;
   let interceptor;
-
+  let storage;
   beforeEach( function() {
-    $q          = { resolve: noop, reject: noop };
-    interceptor = httpbackupInterceptor( $q );
+    $q           = { resolve: noop, reject: noop };
+    storage = new HttpBackupStorage( window );
+    interceptor  = new HttpBackupInterceptor( $q, storage );
   } );
 
   afterEach( function() {
@@ -28,9 +30,9 @@ describe( 'httpbackupInterceptor', ()=> {
     it( 'should add response to localStorage with url as key', ()=> {
       var myResponse = getResponse();
 
-      expect( localStorage.getItem( 'api/v1/status' ) ).toBeNull();
+      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
       interceptor.response( myResponse );
-      expect( localStorage.getItem( 'api/v1/status' ) ).toEqual( JSON.stringify( myResponse ) );
+      expect( storage.getItem( 'api/v1/status' ) ).toEqual( JSON.stringify( myResponse ) );
     } );
   } );
 
@@ -41,7 +43,7 @@ describe( 'httpbackupInterceptor', ()=> {
       var myResponse = getResponse();
       spyOn( $q, "reject" );
 
-      expect( localStorage.getItem( 'api/v1/status' ) ).toBeNull();
+      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
       interceptor.responseError( myResponse );
       expect( $q.reject ).toHaveBeenCalledWith( myResponse );
     } );
@@ -50,8 +52,8 @@ describe( 'httpbackupInterceptor', ()=> {
       var responseError = getResponseError();
       var response      = getResponse();
       spyOn( $q, "resolve" );
-      localStorage.setItem( 'api/v1/status', JSON.stringify( response ) );
-      expect( localStorage.getItem( 'api/v1/status' ) ).not.toBeNull();
+      storage.setItem( 'api/v1/status', response );
+      expect( storage.getItem( 'api/v1/status' ) ).not.toBeNull();
       interceptor.responseError( responseError );
       expect( $q.resolve ).toHaveBeenCalledWith( jasmine.objectContaining( response ) );
     } );
@@ -60,8 +62,8 @@ describe( 'httpbackupInterceptor', ()=> {
       var responseError = getResponseError();
       var response      = getResponse();
       spyOn( $q, "reject" );
-      localStorage.setItem( 'api/v1/status', undefined );
-      expect( localStorage.getItem( 'api/v1/status' ) ).not.toBeNull();
+      storage.setItem( 'api/v1/status', undefined );
+      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
       interceptor.responseError( responseError );
       expect( $q.reject ).toHaveBeenCalledWith( jasmine.objectContaining( responseError ) );
     } );
