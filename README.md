@@ -14,7 +14,14 @@ Getting Started
 ```
 angular
     .module( 'your.module', [ 'httpbackup' ] )
-    .config( $httpProvider) {
+    .config( $httpProvider, httpBackupCacheProvider ) {
         $httpProvider.interceptors.push( 'HttpBackupInterceptor' );
+        
+        // by default all urls are cached,
+        // this allows regex to limit what gets cached
+        httpBackupCacheProvider.setCachingRules( [
+          new RegExp( "^api\/v1" ),
+          new RegExp( ".*[^html]$" )
+        ] );
     }
 ```  

@@ -9,10 +9,10 @@
  */
 
 import HttpBackupInterceptor from './httpbackup.interceptor';
-import HttpBackupStorage from './httpbackup.storage';
+import HttpBackupCache from './httpbackup.cache';
 
 export default
 angular.module( 'httpbackup', [] )
   .factory( 'httpBackupInterceptor', HttpBackupInterceptor )
-  .factory( 'HttpBackupStorage', HttpBackupStorage );
+  .provider( 'httpBackupCache', HttpBackupCache );
 

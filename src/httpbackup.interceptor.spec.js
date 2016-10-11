@@ -1,5 +1,5 @@
 import HttpBackupInterceptor from './httpbackup.interceptor';
-import HttpBackupStorage from './httpbackup.storage';
+import HttpBackupCache from './httpbackup.cache';
 
 import { noop }  from 'lodash';
 
@@ -9,7 +9,7 @@ describe( 'HttpBackupInterceptor', ()=> {
   let storage;
   beforeEach( function() {
     $q           = { resolve: noop, reject: noop };
-    storage = new HttpBackupStorage( window );
+    storage = new HttpBackupCache( window );
     interceptor  = new HttpBackupInterceptor( $q, storage );
   } );
 
