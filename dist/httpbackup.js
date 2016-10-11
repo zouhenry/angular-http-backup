@@ -54,17 +54,23 @@
 	
 	var _httpbackup2 = _interopRequireDefault(_httpbackup);
 	
+	var _httpbackup3 = __webpack_require__(2);
+	
+	var _httpbackup4 = _interopRequireDefault(_httpbackup3);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = angular.module('httpbackup', []).factory('httpBackupInterceptor', _httpbackup2.default); /**
-	                                                                                                            * Created by Henry Zou on 10/7/2016.
-	                                                                                                            *
-	                                                                                                            *
-	                                                                                                            * USAGE:
-	                                                                                                            * In the config block, register the Interceptor
-	                                                                                                            * $httpProvider.interceptors.push( 'HttpBackupInterceptor' );
-	                                                                                                            *
-	                                                                                                            */
+	/**
+	 * Created by Henry Zou on 10/7/2016.
+	 *
+	 *
+	 * USAGE:
+	 * In the config block, register the Interceptor
+	 * $httpProvider.interceptors.push( 'HttpBackupInterceptor' );
+	 *
+	 */
+	
+	exports.default = angular.module('httpbackup', []).factory('httpBackupInterceptor', _httpbackup2.default).provider('httpBackupCache', _httpbackup4.default);
 
 /***/ },
 /* 1 */
@@ -72,20 +78,15 @@
 
 	'use strict';
 	
-	HttpBackupInterceptor.$inject = ["$q", "$log"];
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = HttpBackupInterceptor;
 	/**
 	 * Saves previously successful ajax requests in localStorage and replays them back when there’s server response fails/network error
 	 */
 	
-	exports.default = HttpBackupInterceptor;
-	
-	/* @ngInject */
-	
-	function HttpBackupInterceptor($q, $log) {
-	
+	function HttpBackupInterceptor($q, httpBackupCache) {
 	  return {
 	    response: response,
 	    responseError: responseError
@@ -93,28 +94,107 @@
 	
 	  function response(response) {
 	    // for every successful request, cache the response
-	    window.localStorage.setItem(response.config.url, JSON.stringify(response));
+	    httpBackupCache.setItem(response.config.url, JSON.stringify(response));
 	    return response;
 	  }
 	
 	  function responseError(response) {
-	    var data = window.localStorage.getItem(response.config.url);
+	    var data = httpBackupCache.getItem(response.config.url);
 	    if (data) {
 	      //if response fails and there's cached data
-	
-	      try {
-	        // use cached data
-	        data = JSON.parse(data);
-	        console.debug('using offline cache:', response.config.url);
-	        return $q.resolve(data);
-	      } catch (ex) {
-	        return $q.reject(response);
-	      }
+	      console.warn('using offline cache:', response.config.url);
+	      return $q.resolve(data);
 	    } else {
 	      return $q.reject(response);
 	    }
 	  }
 	}
+	HttpBackupInterceptor.$inject = ['$q', 'httpBackupCache'];
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = HttpBackupCache;
+	/**
+	 * Caching managing
+	 */
+	
+	function HttpBackupCache() {
+	  var allowedUrls = [];
+	  var storage = window.localStorage;
+	  var storageKeys = getItem("HttpBackupCacheKeys") || {};
+	
+	  return {
+	    setCachingRules: setCachingRules, setItem: setItem, getItem: getItem, removeItem: removeItem, clear: clear, checkAllowed: checkAllowed,
+	    $get: function $get() {
+	      return { setCachingRules: setCachingRules, setItem: setItem, getItem: getItem, removeItem: removeItem, clear: clear, checkAllowed: checkAllowed };
+	    }
+	  };
+	
+	  /**
+	   * By default, all urls are cached. This allows the application to specify which urls to cache via regex
+	   *
+	   * @param rules - Array of regular expressions
+	   */
+	  function setCachingRules(rules) {
+	    allowedUrls = rules;
+	  }
+	
+	  function setItem(key, data) {
+	    var isAllowed = checkAllowed(key);
+	    if (!isAllowed) {
+	      return;
+	    }
+	
+	    storage.setItem(key, JSON.stringify(data));
+	    if (key !== "HttpBackupCacheKeys") {
+	      storageKeys[key] = true;
+	      setItem("HttpBackupCacheKeys", storageKeys);
+	    }
+	  }
+	
+	  function getItem(key) {
+	    var data = storage.getItem(key);
+	    try {
+	      return JSON.parse(data);
+	    } catch (ex) {
+	      return null;
+	    }
+	  }
+	
+	  function removeItem(key) {
+	    storage.removeItem(key);
+	
+	    delete storageKeys[key];
+	    setItem("HttpBackupCacheKeys", storageKeys);
+	  }
+	
+	  function clear() {
+	    Object.keys(storageKeys).forEach(function (key) {
+	      delete storageKeys[key];
+	      removeItem(key);
+	    });
+	    setItem("HttpBackupCacheKeys", storageKeys);
+	  }
+	
+	  function checkAllowed(url) {
+	    if (url === "HttpBackupCacheKeys") {
+	      return true;
+	    }
+	
+	    var allAllowed = allowedUrls.reduce(function (allowed, regex) {
+	      return allowed && regex.test(url);
+	    }, true);
+	    return allAllowed;
+	  }
+	}
+	HttpBackupCache.$inject = [];
 
 /***/ }
 /******/ ]);
