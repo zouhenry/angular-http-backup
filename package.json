@@ -1,6 +1,6 @@
 {
   "name": "angular-http-backup",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "http backup for when service/network fails",
   "main": "httpbackup.js",
   "scripts": {
