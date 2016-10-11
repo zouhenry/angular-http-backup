@@ -1,4 +1,4 @@
-import HttpBackupCache from './httpbackup.storage';
+import HttpBackupCache from './httpbackup.cache';
 
 
 describe( 'HttpBackupCache', ()=> {
@@ -81,6 +81,55 @@ describe( 'HttpBackupCache', ()=> {
       var actual = storage.getItem( 'api/v1/status' );
       console.log( actual );
       expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
+    } );
+
+  } );
+
+  describe( '$get ()', ()=> {
+    it( 'should have these methods', function() {
+      var factory = storage.$get();
+      expect( factory.setCachingRules ).toBeDefined();
+      expect( factory.setItem ).toBeDefined();
+      expect( factory.getItem ).toBeDefined();
+      expect( factory.removeItem ).toBeDefined();
+      expect( factory.clear ).toBeDefined();
+    } );
+  } );
+
+  describe( 'checkAllowed ()', ()=> {
+
+    it( 'should pass all', ()=> {
+      var actual = storage.checkAllowed( 'api/v1' );
+      expect( actual ).toBe( true );
+      var actual = storage.checkAllowed( 'mytemplate.html' );
+      expect( actual ).toBe( true );
+    } );
+
+    it( 'should pass api/v1', ()=> {
+      storage.setCachingRules( [
+        new RegExp( "^api\/v1" )
+      ] );
+      var actual = storage.checkAllowed( 'api/v1' );
+      expect( actual ).toBe( true );
+    } );
+
+    it( 'should not pass *.html', () => {
+      storage.setCachingRules( [
+        new RegExp( ".*[^html]$" )
+      ] );
+
+      var actual = storage.checkAllowed( 'mytemplate.html' );
+      expect( actual ).toBe( false );
+    } );
+
+    it( 'should not pass api/v1*.html', () => {
+      storage.setCachingRules( [
+        new RegExp( "^api\/v1" ),
+        new RegExp( ".*[^html]$" )
+      ] );
+
+      var actual = storage.checkAllowed( 'api/v1/myFakeUrlPath/mytemplate.html' );
+      expect( actual ).toBe( false );
     } );
 
   } );
