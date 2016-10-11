@@ -32,7 +32,7 @@ describe( 'HttpBackupInterceptor', ()=> {
 
       expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
       interceptor.response( myResponse );
-      expect( storage.getItem( 'api/v1/status' ) ).toEqual( JSON.stringify( myResponse ) );
+      expect( storage.getItem( 'api/v1/status' ) ).toEqual( myResponse );
     } );
   } );
 
