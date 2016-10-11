@@ -10,7 +10,7 @@ export default function HttpBackupInterceptor( $q, httpBackupCache ) {
 
   function response( response ) {
     // for every successful request, cache the response
-    httpBackupCache.setItem( response.config.url, JSON.stringify( response ) );
+    httpBackupCache.setItem( response.config.url, response) ;
     return response;
   }
 
