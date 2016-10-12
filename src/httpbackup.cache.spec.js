@@ -2,10 +2,10 @@ import HttpBackupCache from './httpbackup.cache';
 
 
 describe( 'HttpBackupCache', ()=> {
-  let storage;
+  let cache;
 
   beforeEach( function() {
-    storage = new HttpBackupCache( window );
+    cache = new HttpBackupCache( window );
   } );
 
   afterEach( function() {
@@ -14,11 +14,11 @@ describe( 'HttpBackupCache', ()=> {
 
   describe( 'sanity check', function() {
     it( 'should always pass', () => {
-      expect( storage ).toBeDefined();
-      expect( storage.setItem ).toBeDefined();
-      expect( storage.getItem ).toBeDefined();
-      expect( storage.removeItem ).toBeDefined();
-      expect( storage.clear ).toBeDefined();
+      expect( cache ).toBeDefined();
+      expect( cache.setItem ).toBeDefined();
+      expect( cache.getItem ).toBeDefined();
+      expect( cache.removeItem ).toBeDefined();
+      expect( cache.clear ).toBeDefined();
     } );
   } );
 
@@ -27,14 +27,14 @@ describe( 'HttpBackupCache', ()=> {
     it( 'should invoke localStorage.setItem', ()=> {
       var myResponse = getResponse();
       spyOn( localStorage, 'setItem' );
-      storage.setItem( myResponse.url, myResponse );
+      cache.setItem( myResponse.url, myResponse );
       expect( localStorage.setItem ).toHaveBeenCalled();
     } );
 
     it( 'should stringify data', ()=> {
       var myResponse = getResponse();
       spyOn( localStorage, 'setItem' );
-      storage.setItem( myResponse.url, myResponse );
+      cache.setItem( myResponse.url, myResponse );
       expect( localStorage.setItem ).toHaveBeenCalledWith( myResponse.url, JSON.stringify( myResponse ) );
     } );
 
@@ -45,7 +45,7 @@ describe( 'HttpBackupCache', ()=> {
     it( 'should invoke localStorage.removeItem', ()=> {
       var myResponse = getResponse();
       spyOn( localStorage, 'removeItem' );
-      storage.removeItem( myResponse.url );
+      cache.removeItem( myResponse.url );
       expect( localStorage.removeItem ).toHaveBeenCalledWith( myResponse.url );
     } );
 
@@ -55,10 +55,10 @@ describe( 'HttpBackupCache', ()=> {
 
     it( 'should only clear keys set by httpback.storage', function() {
       localStorage.setItem( 'keep', 'me' );
-      storage.setItem( 'delete', 'me' );
-      storage.clear();
+      cache.setItem( 'delete', 'me' );
+      cache.clear();
       expect( localStorage.getItem( 'keep' ) ).toBe( 'me' );
-      expect( storage.getItem( 'storage' ) ).toBe( null );
+      expect( cache.getItem( 'storage' ) ).toBe( null );
     } );
 
   } );
@@ -66,28 +66,28 @@ describe( 'HttpBackupCache', ()=> {
   describe( 'getItem ()', ()=> {
 
     it( 'should return "null" if localStorage does not have cache', ()=> {
-      storage.removeItem( 'api/v1/status' );
-      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
+      cache.removeItem( 'api/v1/status' );
+      expect( cache.getItem( 'api/v1/status' ) ).toBeNull();
     } );
 
     it( 'should return cached object', ()=> {
       var response = getResponse();
-      storage.setItem( 'api/v1/status', response );
-      expect( storage.getItem( 'api/v1/status' ) ).toEqual( response );
+      cache.setItem( 'api/v1/status', response );
+      expect( cache.getItem( 'api/v1/status' ) ).toEqual( response );
     } );
 
     it( 'should return "null" if unable to parse json', ()=> {
-      storage.setItem( 'api/v1/status', undefined );
-      var actual = storage.getItem( 'api/v1/status' );
+      cache.setItem( 'api/v1/status', undefined );
+      var actual = cache.getItem( 'api/v1/status' );
       console.log( actual );
-      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
+      expect( cache.getItem( 'api/v1/status' ) ).toBeNull();
     } );
 
   } );
 
   describe( '$get ()', ()=> {
     it( 'should have these methods', function() {
-      var factory = storage.$get();
+      var factory = cache.$get();
       expect( factory.setCachingRules ).toBeDefined();
       expect( factory.setItem ).toBeDefined();
       expect( factory.getItem ).toBeDefined();
@@ -99,36 +99,37 @@ describe( 'HttpBackupCache', ()=> {
   describe( 'checkAllowed ()', ()=> {
 
     it( 'should pass all', ()=> {
-      var actual = storage.checkAllowed( 'api/v1' );
+      var actual = cache.checkAllowed( 'api/v1' );
       expect( actual ).toBe( true );
-      var actual = storage.checkAllowed( 'mytemplate.html' );
+
+      actual = cache.checkAllowed( 'mytemplate.html' );
       expect( actual ).toBe( true );
     } );
 
     it( 'should pass api/v1', ()=> {
-      storage.setCachingRules( [
+      cache.setCachingRules( [
         new RegExp( "^api\/v1" )
       ] );
-      var actual = storage.checkAllowed( 'api/v1' );
+      var actual = cache.checkAllowed( 'api/v1' );
       expect( actual ).toBe( true );
     } );
 
     it( 'should not pass *.html', () => {
-      storage.setCachingRules( [
+      cache.setCachingRules( [
         new RegExp( ".*[^html]$" )
       ] );
 
-      var actual = storage.checkAllowed( 'mytemplate.html' );
+      var actual = cache.checkAllowed( 'mytemplate.html' );
       expect( actual ).toBe( false );
     } );
 
     it( 'should not pass api/v1*.html', () => {
-      storage.setCachingRules( [
+      cache.setCachingRules( [
         new RegExp( "^api\/v1" ),
         new RegExp( ".*[^html]$" )
       ] );
 
-      var actual = storage.checkAllowed( 'api/v1/myFakeUrlPath/mytemplate.html' );
+      var actual = cache.checkAllowed( 'api/v1/myFakeUrlPath/mytemplate.html' );
       expect( actual ).toBe( false );
     } );
 
