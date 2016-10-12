@@ -3,6 +3,7 @@
 Status:
 [![npm](https://img.shields.io/npm/dm/localeval.svg?maxAge=2592000)](https://github.com/zouhenry/angular-http-backup)
 [![Build Status](https://travis-ci.org/zouhenry/angular-http-backup.svg?branch=master)](https://travis-ci.org/zouhenry/angular-http-backup)
+[![Codecov](https://img.shields.io/codecov/c/github/codecov/example-python.svg?maxAge=2592000)](https://github.com/zouhenry/angular-http-backup)
 
 ##Replay cached data when network/service fails
 
