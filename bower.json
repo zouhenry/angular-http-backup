@@ -1,0 +1,13 @@
+{
+  "name": "angular-http-backup",
+  "description": "http backup for when service/network fails",
+  "main": "httpbackup.js",
+  "authors": [
+    "zouhenry@gmail.com"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/zouhenry/angular-http-backup",
+  "devDependencies": {
+    "angular": "1.3"
+  }
+}
