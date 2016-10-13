@@ -12,7 +12,16 @@ Status:
 ----------------------
 Getting Started
 ----------------------
+```
+npm install --save angular-http-backup
+```
+```
+bower install --save angular-http-backup
+```
 
+----------------------
+usage
+----------------------
 ```
 angular
     .module( 'your.module', [ 'httpbackup' ] )
@@ -27,3 +36,16 @@ angular
         ] );
     }
 ```  
+
+### Resetting cache
+```
+// inject httpBackupCache
+function controller(httpBackupCache){
+    //reset all keys
+    httpBackupCache.reset();
+    
+    // remove individual key 
+    httpBackupCache.removeItem('api/v1/auth/login');
+    httpBackupCache.removeItem('api/v1/auth/status');
+}
+```
