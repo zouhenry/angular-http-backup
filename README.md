@@ -1,7 +1,7 @@
 # angular-http-backup
 
 Status:
-[![npm](https://img.shields.io/npm/dm/localeval.svg?maxAge=2592000)](https://github.com/zouhenry/angular-http-backup)
+[![npm downloads](https://img.shields.io/npm/dm/angular-http-backup.svg?style=flat-square)](http://npm-stat.com/charts.html?package=angular-http-backup)
 [![Build Status](https://travis-ci.org/zouhenry/angular-http-backup.svg?branch=master)](https://travis-ci.org/zouhenry/angular-http-backup)
 [![codecov](https://codecov.io/gh/zouhenry/angular-http-backup/branch/master/graph/badge.svg)](https://codecov.io/gh/zouhenry/angular-http-backup)
 
