@@ -49,3 +49,12 @@ function controller(httpBackupCache){
     httpBackupCache.removeItem('api/v1/auth/status');
 }
 ```
+
+### Events
+```
+    // event $emitted on $rootScope when a cache is used
+    $rootScope.$on( 'HttpBackup_activated', function( event, data ) {
+        console.log(data.url);      // request url
+        console.log(data.response); // cached response
+    }
+```

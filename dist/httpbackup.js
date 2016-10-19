@@ -86,7 +86,7 @@
 	 * Saves previously successful ajax requests in localStorage and replays them back when there’s server response fails/network error
 	 */
 	
-	function HttpBackupInterceptor($q, httpBackupCache) {
+	function HttpBackupInterceptor($q, $rootScope, httpBackupCache) {
 	  return {
 	    response: response,
 	    responseError: responseError
@@ -103,13 +103,14 @@
 	    if (data) {
 	      //if response fails and there's cached data
 	      console.warn('using offline cache:', response.config.url);
+	      $rootScope.$emit('HttpBackup_activated', { url: response.config.url, response: data });
 	      return $q.resolve(data);
 	    } else {
 	      return $q.reject(response);
 	    }
 	  }
 	}
-	HttpBackupInterceptor.$inject = ['$q', 'httpBackupCache'];
+	HttpBackupInterceptor.$inject = ['$q', '$rootScope', 'httpBackupCache'];
 
 /***/ },
 /* 2 */
