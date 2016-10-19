@@ -31,8 +31,8 @@ angular
         // by default all urls are cached,
         // this allows regex to limit what gets cached
         httpBackupCacheProvider.setCachingRules( [
-          new RegExp( "^api\/v1" ),
-          new RegExp( ".*[^html]$" )
+          new RegExp( "^api\/v1" ),        //cache request urls starting with "api/v1"
+          new RegExp("^(?!.*[.]html$).*$") //ignore request urls ending with ".html"
         ] );
     }
 ```  
