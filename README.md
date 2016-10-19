@@ -42,7 +42,7 @@ angular
 // inject httpBackupCache
 function controller(httpBackupCache){
     //reset all keys
-    httpBackupCache.reset();
+    httpBackupCache.clear();
     
     // remove individual key 
     httpBackupCache.removeItem('api/v1/auth/login');
