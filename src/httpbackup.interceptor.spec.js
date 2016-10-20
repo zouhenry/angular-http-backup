@@ -7,10 +7,21 @@ describe( 'HttpBackupInterceptor', ()=> {
   let $q;
   let interceptor;
   let storage;
+  let $rootScope;
+
+  function $httpParamSerializerJQLike( params ) {
+    return "";
+  }
+
+  // console.log( angular.mock );
+  // console.log( angular.mock.inject );
+  // console.log(HttpBackup);
   beforeEach( function() {
-    $q           = { resolve: noop, reject: noop };
-    storage = new HttpBackupCache( window );
-    interceptor  = new HttpBackupInterceptor( $q, storage );
+    $q         = { resolve: noop, reject: noop };
+    storage    = new HttpBackupCache( window );
+    $rootScope = { $emit: noop };
+
+    interceptor = new HttpBackupInterceptor( $q, $rootScope, $httpParamSerializerJQLike, storage );
   } );
 
   afterEach( function() {
@@ -73,7 +84,8 @@ describe( 'HttpBackupInterceptor', ()=> {
   function getResponse() {
     var myResponse = {
       config: {
-        url: "api/v1/status"
+        url   : "api/v1/status",
+        params: {}
       },
       data  : { EID: 123456789, Description: "Fake Enterprise ID" }
     };
@@ -83,7 +95,8 @@ describe( 'HttpBackupInterceptor', ()=> {
   function getResponseError() {
     var myResponse = {
       config: {
-        url: "api/v1/status"
+        url   : "api/v1/status",
+        params: {}
       },
       data  : { EID: "response-error", Description: "Error - 12345" }
     };
