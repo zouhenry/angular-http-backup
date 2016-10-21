@@ -10,17 +10,20 @@ export default function HttpBackupInterceptor( $q, $rootScope, $httpParamSeriali
   };
 
   function response( response ) {
+    var urlKey = getCacheKey( response.config );
     // for every successful request, cache the response
-    httpBackupCache.setItem( getCacheKey( response.config ), response );
+    httpBackupCache.setItem( urlKey, response );
+    $rootScope.$emit( 'HttpBackup_cached', { url: urlKey, response: response } );
     return response;
   }
 
   function responseError( response ) {
-    console.log( 'before getKey' );
-    var data = httpBackupCache.getItem( getCacheKey( response.config ) );
-    if ( data ) { //if response fails and there's cached data
-      $rootScope.$emit( 'HttpBackup_activated', { url: response.config.url, response: data } );
-      return $q.resolve( data );
+    var urlKey = getCacheKey( response.config );
+
+    var cachedResponse = httpBackupCache.getItem( urlKey );
+    if ( cachedResponse ) { //if response fails and there's cached data
+      $rootScope.$emit( 'HttpBackup_activated', { url: urlKey, response: cachedResponse } );
+      return $q.resolve( cachedResponse );
     } else {
       return $q.reject( response );
     }

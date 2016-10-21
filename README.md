@@ -52,7 +52,13 @@ function controller(httpBackupCache){
 
 ### Events
 ```
-    // event $emitted on $rootScope when a cache is used
+    // event $emitted on $rootScope when a response is cached
+    $rootScope.$on( 'HttpBackup_cached', function( event, data ) {
+        console.log(data.url);      // request url
+        console.log(data.response); // cached response
+    }    
+    
+    // event $emitted on $rootScope when a cached response is used
     $rootScope.$on( 'HttpBackup_activated', function( event, data ) {
         console.log(data.url);      // request url
         console.log(data.response); // cached response
