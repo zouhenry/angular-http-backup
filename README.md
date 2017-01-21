@@ -45,8 +45,9 @@ function controller(httpBackupCache){
     httpBackupCache.clear();
     
     // remove individual key 
-    httpBackupCache.removeItem('api/v1/auth/login');
-    httpBackupCache.removeItem('api/v1/auth/status');
+    httpBackupCache.removeItem('GET:api/v1/auth/login');
+    httpBackupCache.removeItem('POST:api/v1/auth/status');
+    httpBackupCache.removeItem('PUT:api/v1/auth/ping');
 }
 ```
 

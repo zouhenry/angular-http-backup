@@ -30,7 +30,7 @@ export default function HttpBackupInterceptor( $q, $rootScope, $httpParamSeriali
   }
 
   function getCacheKey( config ) {
-    return config.url + $httpParamSerializerJQLike( config.params );
+    return config.method + ":" + config.url + $httpParamSerializerJQLike( config.params );
   }
 }
 
