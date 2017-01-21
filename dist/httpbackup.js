@@ -115,7 +115,7 @@
 	  }
 	
 	  function getCacheKey(config) {
-	    return config.url + $httpParamSerializerJQLike(config.params);
+	    return config.method + ":" + config.url + $httpParamSerializerJQLike(config.params);
 	  }
 	}
 	

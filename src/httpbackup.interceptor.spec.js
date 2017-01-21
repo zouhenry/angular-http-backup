@@ -41,9 +41,18 @@ describe( 'HttpBackupInterceptor', ()=> {
     it( 'should add response to localStorage with url as key', ()=> {
       var myResponse = getResponse();
 
-      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
+      expect( storage.getItem( 'GET:api/v1/status' ) ).toBeNull();
       interceptor.response( myResponse );
-      expect( storage.getItem( 'api/v1/status' ) ).toEqual( myResponse );
+      expect( storage.getItem( 'GET:api/v1/status' ) ).toEqual( myResponse );
+    } );
+
+    it( 'should work with different http verbs', ()=> {
+      var myResponse = getResponse();
+      myResponse.config.method = "POST";
+
+      expect( storage.getItem( 'POST:api/v1/status' ) ).toBeNull();
+      interceptor.response( myResponse );
+      expect( storage.getItem( 'POST:api/v1/status' ) ).toEqual( myResponse );
     } );
   } );
 
@@ -63,18 +72,17 @@ describe( 'HttpBackupInterceptor', ()=> {
       var responseError = getResponseError();
       var response      = getResponse();
       spyOn( $q, "resolve" );
-      storage.setItem( 'api/v1/status', response );
-      expect( storage.getItem( 'api/v1/status' ) ).not.toBeNull();
+      storage.setItem( 'GET:api/v1/status', response );
+      expect( storage.getItem( 'GET:api/v1/status' ) ).not.toBeNull();
       interceptor.responseError( responseError );
       expect( $q.resolve ).toHaveBeenCalledWith( jasmine.objectContaining( response ) );
     } );
 
     it( 'should reject if unable to parse json', ()=> {
       var responseError = getResponseError();
-      var response      = getResponse();
       spyOn( $q, "reject" );
-      storage.setItem( 'api/v1/status', undefined );
-      expect( storage.getItem( 'api/v1/status' ) ).toBeNull();
+      storage.setItem( 'GET:api/v1/status', undefined );
+      expect( storage.getItem( 'GET:api/v1/status' ) ).toBeNull();
       interceptor.responseError( responseError );
       expect( $q.reject ).toHaveBeenCalledWith( jasmine.objectContaining( responseError ) );
     } );
@@ -84,6 +92,7 @@ describe( 'HttpBackupInterceptor', ()=> {
   function getResponse() {
     var myResponse = {
       config: {
+        method: "GET",
         url   : "api/v1/status",
         params: {}
       },
@@ -95,6 +104,7 @@ describe( 'HttpBackupInterceptor', ()=> {
   function getResponseError() {
     var myResponse = {
       config: {
+        method: "GET",
         url   : "api/v1/status",
         params: {}
       },
